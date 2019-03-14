@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">BakersWorld</string>
     <string name="error_failed_to_fetch_recipes">Failed to get recipe list.</string>
+    <string name="error_no_internet">
+        No Internet connection. Please check your network settings.
+    </string>
+    <string name="error_invalid_recipe">Invalid recipe.</string>
 </resources>

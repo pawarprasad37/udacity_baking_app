@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.theandroiddeveloper.bakersworld.dialog.ProgressDialog;
 
+import io.realm.Realm;
+
 public class BaseActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
+    private Realm realm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,4 +26,19 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.hide();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        realm.close();
+    }
+
+    public Realm getRealmInstance() {
+        return realm;
+    }
 }

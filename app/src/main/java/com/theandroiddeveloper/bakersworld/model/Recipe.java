@@ -2,26 +2,27 @@ package com.theandroiddeveloper.bakersworld.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
-public class Recipe {
+public class Recipe extends RealmObject {
 
-    @SerializedName("id")
+    @SerializedName(MemberKeys.ID)
     private int id;
 
-    @SerializedName("name")
+    @SerializedName(MemberKeys.NAME)
     private String name;
 
-    @SerializedName("ingredients")
-    private List<RecipeIngredient> ingredients;
+    @SerializedName(MemberKeys.INGREDIENTS)
+    private RealmList<RecipeIngredient> ingredients;
 
-    @SerializedName("steps")
-    private List<RecipeStep> steps;
+    @SerializedName(MemberKeys.STEPS)
+    private RealmList<RecipeStep> steps;
 
-    @SerializedName("servings")
+    @SerializedName(MemberKeys.SERVINGS)
     private int servings;
 
-    @SerializedName("image")
+    @SerializedName(MemberKeys.IMAGE)
     private String image;
 
     public int getId() {
@@ -32,11 +33,11 @@ public class Recipe {
         return name;
     }
 
-    public List<RecipeIngredient> getIngredients() {
+    public RealmList<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public List<RecipeStep> getSteps() {
+    public RealmList<RecipeStep> getSteps() {
         return steps;
     }
 
@@ -46,5 +47,14 @@ public class Recipe {
 
     public String getImage() {
         return image;
+    }
+
+    public interface MemberKeys {
+        String ID = "id";
+        String NAME = "name";
+        String INGREDIENTS = "ingredients";
+        String STEPS = "steps";
+        String SERVINGS = "servings";
+        String IMAGE = "image";
     }
 }

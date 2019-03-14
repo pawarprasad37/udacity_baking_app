@@ -2,7 +2,9 @@ package com.theandroiddeveloper.bakersworld.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RecipeStep {
+import io.realm.RealmObject;
+
+public class RecipeStep extends RealmObject {
 
     @SerializedName("id")
     private int id;
