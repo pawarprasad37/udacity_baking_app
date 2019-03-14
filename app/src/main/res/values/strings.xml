@@ -5,4 +5,7 @@
         No Internet connection. Please check your network settings.
     </string>
     <string name="error_invalid_recipe">Invalid recipe.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

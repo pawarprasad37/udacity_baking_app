@@ -4,4 +4,5 @@
     <dimen name="view_elevation_small">4dp</dimen>
     <dimen name="margin_padding_small">4dp</dimen>
     <dimen name="margin_padding_medium">8dp</dimen>
+    <dimen name="minimum_button_heght">48dp</dimen>
 </resources>
