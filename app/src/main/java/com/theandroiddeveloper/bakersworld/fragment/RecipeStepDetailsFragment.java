@@ -2,6 +2,7 @@ package com.theandroiddeveloper.bakersworld.fragment;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -126,6 +127,8 @@ public class RecipeStepDetailsFragment extends Fragment implements View.OnClickL
         exoPlayer.setPlayWhenReady(true);
 
         playerView.setPlayer(exoPlayer);
+
+        playerView.setBackgroundColor(Color.BLACK);
     }
 
     private void setPlayerOrImageViewDimens(View targetView) {

@@ -59,7 +59,7 @@ public class RecipeStepDetailsActivity extends BaseActivity {
         } else {
             activityTitle = recipe.getName() + " " + getString(R.string.step) + " " +
                     activeStepIndex + " " + getString(R.string.of) + " " +
-                    recipe.getSteps().size();
+                    (recipe.getSteps().size() - 1);
         }
         getSupportActionBar().setTitle(activityTitle);
     }
