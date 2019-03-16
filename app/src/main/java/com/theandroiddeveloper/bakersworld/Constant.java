@@ -6,5 +6,11 @@ public class Constant {
 
     public interface IntentExtra {
         String RECIPE_ID = "RECIPE_ID";
+        String RECIPE_STEP_INDEX = "RECIPE_STEP_INDEX";
+        String IS_MASTER_DETAIL_FLOW = "IS_MASTER_DETAIL_FLOW";
+    }
+
+    public interface AppState {
+        String ACTIVE_STEP_INDEX = "ACTIVE_STEP_INDEX";
     }
 }

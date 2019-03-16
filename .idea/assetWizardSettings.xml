@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="color" value="d3d3d3" />
+                                                <entry key="color" value="ffffff" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_image_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_navigate_before_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -45,7 +45,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="outputName" value="ic_image_placeholder" />
+                                      <entry key="outputName" value="ic_previous" />
                                     </map>
                                   </option>
                                 </PersistentState>

@@ -5,4 +5,5 @@
     <dimen name="margin_padding_small">4dp</dimen>
     <dimen name="margin_padding_medium">8dp</dimen>
     <dimen name="minimum_button_heght">48dp</dimen>
+    <dimen name="nav_button_top_margin">100dp</dimen>
 </resources>
