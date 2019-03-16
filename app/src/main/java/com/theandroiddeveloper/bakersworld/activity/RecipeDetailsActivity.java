@@ -50,7 +50,7 @@ public class RecipeDetailsActivity extends BaseActivity {
 
         final boolean isMasterDetailFlow = (flStepDescriptionFragment != null);
 
-        RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment()
+        final RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment()
                 .setSelectedStepIndex(isMasterDetailFlow ? 0 : -1)
                 .setSelectedRecipe(selectedRecipe);
         getSupportFragmentManager()
@@ -77,6 +77,7 @@ public class RecipeDetailsActivity extends BaseActivity {
                 RecipeStep selectedRecipeStep = selectedRecipe.getSteps().get(position);
                 onRecipeStepSelected(selectedRecipe, selectedRecipeStep, position,
                         isMasterDetailFlow, finalRecipeStepDetailsFragment);
+                recipeStepsFragment.setSelectedStepIndex(position);
             }
         });
     }

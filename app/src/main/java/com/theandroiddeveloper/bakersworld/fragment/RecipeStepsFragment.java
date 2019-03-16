@@ -35,6 +35,7 @@ public class RecipeStepsFragment extends Fragment {
 
     public RecipeStepsFragment setSelectedStepIndex(int selectedStepIndex) {
         this.selectedStepIndex = selectedStepIndex;
+        updateListSelection();
         return this;
     }
 
@@ -66,4 +67,11 @@ public class RecipeStepsFragment extends Fragment {
         listView.setOnItemClickListener(onStepClickListener);
     }
 
+    private void updateListSelection() {
+        if (!isAdded() || listView == null || listView.getAdapter() == null) {
+            return;
+        }
+        ((RecipeStepsAdapter) listView.getAdapter())
+                .setSelectedIndex(selectedStepIndex);
+    }
 }

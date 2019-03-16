@@ -1,6 +1,7 @@
 package com.theandroiddeveloper.bakersworld.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
@@ -50,6 +51,8 @@ public class RecipeStepsAdapter extends BaseAdapter {
         if (selectedPosition == position) {
             textView.setBackgroundColor(ContextCompat.getColor(context,
                     R.color.colorPrimaryDarkTransparent));
+        } else {
+            textView.setBackgroundColor(Color.WHITE);
         }
         textView.setText(getItem(position).getShortDescription());
         return textView;
@@ -65,5 +68,10 @@ public class RecipeStepsAdapter extends BaseAdapter {
                 .getDimensionPixelOffset(R.dimen.minimum_button_heght) * 1.5));
         textView.setGravity(Gravity.CENTER_VERTICAL);
         return textView;
+    }
+
+    public void setSelectedIndex(int selectedStepIndex) {
+        this.selectedPosition = selectedStepIndex;
+        this.notifyDataSetChanged();
     }
 }

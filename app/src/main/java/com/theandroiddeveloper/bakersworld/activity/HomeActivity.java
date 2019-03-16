@@ -3,8 +3,11 @@ package com.theandroiddeveloper.bakersworld.activity;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.theandroiddeveloper.bakersworld.CommonUtil;
@@ -51,6 +54,14 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
 
     private void displayRecipes(RealmResults<Recipe> recipeRealmResults) {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        View tabIdentifier = findViewById(R.id.tabIdentifier);
+        boolean isTabletDevice = (tabIdentifier != null);
+        if (isTabletDevice) {
+            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),
+                    3));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
         HomeRecipeAdapter adapter = new HomeRecipeAdapter(this, recipeRealmResults);
         recyclerView.setAdapter(adapter);
     }
