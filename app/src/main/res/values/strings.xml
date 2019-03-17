@@ -13,4 +13,13 @@
     <string name="next">Next</string>
     <string name="of">of</string>
     <string name="step">step</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_no_recie_selected">Set a recipe from app first.</string>
+    <string name="widget_change_recipe">SELECT RECIPE</string>
+    <string name="select">SELECT</string>
+    <string name="cancel">CANCEL</string>
+    <string name="widget_recipe_select_confirmation">Select this recipe for home screen widget?</string>
+    <string name="activity_title_select_widget_recipe">Select widget recipe</string>
+    <string name="widget_recipe_set_msg">Widget recipe updated</string>
 </resources>

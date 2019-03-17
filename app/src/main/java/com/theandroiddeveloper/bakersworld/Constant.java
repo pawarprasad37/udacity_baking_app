@@ -8,9 +8,14 @@ public class Constant {
         String RECIPE_ID = "RECIPE_ID";
         String RECIPE_STEP_INDEX = "RECIPE_STEP_INDEX";
         String IS_MASTER_DETAIL_FLOW = "IS_MASTER_DETAIL_FLOW";
+        String IS_WIDGET_RECIPE_SELECTION_MODE = "IS_WIDGET_RECIPE_SELECTION_MODE";
     }
 
     public interface AppState {
         String ACTIVE_STEP_INDEX = "ACTIVE_STEP_INDEX";
+    }
+
+    public interface AppPreferences {
+        String WIDGET_RECIPE = "WIDGET_RECIPE";
     }
 }

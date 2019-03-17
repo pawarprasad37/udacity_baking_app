@@ -1,9 +1,15 @@
 package com.theandroiddeveloper.bakersworld.adapter;
 
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +18,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.theandroiddeveloper.bakersworld.AppPreferences;
+import com.theandroiddeveloper.bakersworld.AppWidget;
 import com.theandroiddeveloper.bakersworld.CommonUtil;
 import com.theandroiddeveloper.bakersworld.Constant;
 import com.theandroiddeveloper.bakersworld.R;
 import com.theandroiddeveloper.bakersworld.activity.RecipeDetailsActivity;
 import com.theandroiddeveloper.bakersworld.model.Recipe;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class HomeRecipeAdapter extends RecyclerView.Adapter {
     private Context context;
     private RealmResults<Recipe> recipeRealmResults;
+    private boolean isWidgetRecipeSelectionMode;
 
-    public HomeRecipeAdapter(Context context, RealmResults<Recipe> recipeRealmResults) {
+    public HomeRecipeAdapter(Context context, RealmResults<Recipe> recipeRealmResults,
+                             boolean isWidgetRecipeSelectionMode) {
         this.context = context;
         this.recipeRealmResults = recipeRealmResults;
+        this.isWidgetRecipeSelectionMode = isWidgetRecipeSelectionMode;
 
         //register update listener
         recipeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Recipe>>() {
@@ -79,9 +93,38 @@ public class HomeRecipeAdapter extends RecyclerView.Adapter {
         public void onClick(View v) {
             Recipe selectedRecipe = recipeRealmResults.get(getAdapterPosition());
 
-            Intent intent = new Intent(context, RecipeDetailsActivity.class);
-            intent.putExtra(Constant.IntentExtra.RECIPE_ID, selectedRecipe.getId());
-            context.startActivity(intent);
+            if (isWidgetRecipeSelectionMode) {
+                setWidgetRecipe(context, selectedRecipe);
+            } else {
+                Intent intent = new Intent(context, RecipeDetailsActivity.class);
+                intent.putExtra(Constant.IntentExtra.RECIPE_ID, selectedRecipe.getId());
+                context.startActivity(intent);
+            }
         }
+    }
+
+    private void setWidgetRecipe(final Context context, final Recipe selectedRecipe) {
+        new AlertDialog.Builder(context)
+                .setMessage(context.getString(R.string.widget_recipe_select_confirmation))
+                .setPositiveButton(context.getString(R.string.select),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                synchronized (HomeRecipeAdapter.this) {
+                                    Realm realm = Realm.getDefaultInstance();
+                                    Recipe unmanagedRecipe = realm.copyFromRealm(selectedRecipe);
+                                    realm.close();
+                                    AppPreferences.getInstance(context)
+                                            .setWidgetRecipe(unmanagedRecipe);
+                                    AppWidget.updateWidget(context);
+                                    CommonUtil.showToast(context,
+                                            context.getString(R.string.widget_recipe_set_msg),
+                                            Toast.LENGTH_SHORT);
+                                }
+                            }
+                        })
+                .setNegativeButton(context.getString(R.string.cancel), null)
+                .create()
+                .show();
     }
 }

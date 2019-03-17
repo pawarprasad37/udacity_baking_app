@@ -7,10 +7,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.theandroiddeveloper.bakersworld.AppWidget;
 import com.theandroiddeveloper.bakersworld.CommonUtil;
+import com.theandroiddeveloper.bakersworld.Constant;
 import com.theandroiddeveloper.bakersworld.NetworkManager;
 import com.theandroiddeveloper.bakersworld.R;
 import com.theandroiddeveloper.bakersworld.adapter.HomeRecipeAdapter;
@@ -30,6 +33,13 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        if (getIntent().getBooleanExtra(Constant.IntentExtra.IS_WIDGET_RECIPE_SELECTION_MODE,
+                false)) {
+            getSupportActionBar().setTitle(getString(R.string.activity_title_select_widget_recipe));
+        }
+
+        AppWidget.updateWidget(this);
     }
 
     @Override
@@ -62,7 +72,9 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }
-        HomeRecipeAdapter adapter = new HomeRecipeAdapter(this, recipeRealmResults);
+        HomeRecipeAdapter adapter = new HomeRecipeAdapter(this, recipeRealmResults,
+                getIntent().getBooleanExtra(Constant.IntentExtra.IS_WIDGET_RECIPE_SELECTION_MODE,
+                        false));
         recyclerView.setAdapter(adapter);
     }
 
