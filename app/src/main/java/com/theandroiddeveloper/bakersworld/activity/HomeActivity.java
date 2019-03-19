@@ -1,6 +1,8 @@
 package com.theandroiddeveloper.bakersworld.activity;
 
 import android.support.annotation.NonNull;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,6 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeActivity extends BaseActivity implements Callback<List<Recipe>> {
+    private CountingIdlingResource countingIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +43,31 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
         }
 
         AppWidget.updateWidget(this);
+
+        getIdlingResource();
+    }
+
+    public IdlingResource getIdlingResource() {
+        if (countingIdlingResource == null) {
+            countingIdlingResource = new CountingIdlingResource("HomeActivity");
+        }
+        return countingIdlingResource;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         RealmResults<Recipe> recipeRealmResults = getRealmInstance()
                 .where(Recipe.class)
                 .findAll();
         displayRecipes(recipeRealmResults);
         if (recipeRealmResults.isEmpty()) {
+            countingIdlingResource.increment();
             if (!CommonUtil.hasNetworkConnectivity(this)) {
-                CommonUtil.showToast(this, getString(R.string.error_no_internet),
+                CommonUtil.showToast(this,
+                        getString(R.string.error_no_internet),
                         Toast.LENGTH_LONG);
+                countingIdlingResource.decrement();
                 return;
             }
             showProgressDialog();
@@ -74,7 +88,7 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
         }
         HomeRecipeAdapter adapter = new HomeRecipeAdapter(this, recipeRealmResults,
                 getIntent().getBooleanExtra(Constant.IntentExtra.IS_WIDGET_RECIPE_SELECTION_MODE,
-                        false));
+                        false), countingIdlingResource);
         recyclerView.setAdapter(adapter);
     }
 
@@ -107,5 +121,7 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
         hideProgressDialog();
         CommonUtil.showToast(getApplicationContext(),
                 getString(R.string.error_failed_to_fetch_recipes), Toast.LENGTH_SHORT);
+        countingIdlingResource.decrement();
     }
+
 }
