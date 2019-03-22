@@ -2,6 +2,7 @@ package com.theandroiddeveloper.bakersworld.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -16,11 +17,28 @@ import com.theandroiddeveloper.bakersworld.model.Recipe;
 import com.theandroiddeveloper.bakersworld.model.RecipeStep;
 
 public class RecipeDetailsActivity extends BaseActivity {
+    private RecipeStepsFragment recipeStepsFragment;
+    private RecipeStepDetailsFragment recipeStepDetailsFragment;
+    private int selectedStepIndex;
+    private long playerPosition;
+    private Parcelable scrollState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         setContentView(R.layout.layout_recipe_details_activity);
+
+        if (savedInstanceState != null) {
+            scrollState = savedInstanceState
+                    .getParcelable(Constant.AppState.STEP_LIST_SCROLL_STATE);
+            selectedStepIndex = savedInstanceState
+                    .getInt(Constant.AppState.STEP_LIST_SELECTED_INDEX);
+            playerPosition = savedInstanceState
+                    .getLong(Constant.AppState.VIDEO_PLAYER_POSITION);
+        } else {
+            boolean isMasterDetailFlow = (findViewById(R.id.flStepDescriptionFragment) != null);
+            selectedStepIndex = isMasterDetailFlow ? 0 : -1;
+        }
     }
 
     @Override
@@ -42,6 +60,14 @@ public class RecipeDetailsActivity extends BaseActivity {
         displayRecipeDetails(selectedRecipe);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scrollState = recipeStepsFragment.getListScrollState();
+        playerPosition = recipeStepDetailsFragment != null ?
+                recipeStepDetailsFragment.getPlayerPosition() : 0;
+    }
+
     private void displayRecipeDetails(final Recipe selectedRecipe) {
         getSupportActionBar().setTitle(selectedRecipe.getName());
 
@@ -50,19 +76,22 @@ public class RecipeDetailsActivity extends BaseActivity {
 
         final boolean isMasterDetailFlow = (flStepDescriptionFragment != null);
 
-        final RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment()
-                .setSelectedStepIndex(isMasterDetailFlow ? 0 : -1)
+        recipeStepsFragment = new RecipeStepsFragment()
+                .setListScrollState(scrollState)
+                .setSelectedStepIndex(selectedStepIndex)
                 .setSelectedRecipe(selectedRecipe);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flStepsFragment, recipeStepsFragment)
                 .commit();
 
-        RecipeStepDetailsFragment recipeStepDetailsFragment = null;
+        recipeStepDetailsFragment = null;
         if (isMasterDetailFlow) {
             recipeStepDetailsFragment = new RecipeStepDetailsFragment()
                     .setIsMasterDetailFlow(true)
-                    .setSelectedRecipeStep(selectedRecipe.getSteps().first(), 0,
+                    .setPlayerPosition(playerPosition)
+                    .setSelectedRecipeStep(selectedRecipe.getSteps().get(selectedStepIndex),
+                            selectedStepIndex,
                             selectedRecipe.getSteps().size());
             getSupportFragmentManager()
                     .beginTransaction()
@@ -74,6 +103,7 @@ public class RecipeDetailsActivity extends BaseActivity {
         recipeStepsFragment.setStepClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                playerPosition = 0;
                 RecipeStep selectedRecipeStep = selectedRecipe.getSteps().get(position);
                 onRecipeStepSelected(selectedRecipe, selectedRecipeStep, position,
                         isMasterDetailFlow, finalRecipeStepDetailsFragment);
@@ -90,8 +120,10 @@ public class RecipeDetailsActivity extends BaseActivity {
         }
         if (isMasterDetailFlow && recipeStepDetailsFragment != null) {
             //update step details fragment
-            recipeStepDetailsFragment.setSelectedRecipeStep(selectedRecipeStep, stepIndex,
-                    selectedRecipe.getSteps().size());
+            recipeStepDetailsFragment
+                    .setPlayerPosition(0)
+                    .setSelectedRecipeStep(selectedRecipeStep, stepIndex,
+                            selectedRecipe.getSteps().size());
             //navigation buttons are hidden in master-detail flow.
         } else {
             //start new activity for step details
@@ -102,4 +134,14 @@ public class RecipeDetailsActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(Constant.AppState.STEP_LIST_SCROLL_STATE, scrollState);
+        outState.putInt(Constant.AppState.STEP_LIST_SELECTED_INDEX,
+                recipeStepsFragment.getSelectedIndex());
+        outState.putLong(Constant.AppState.VIDEO_PLAYER_POSITION, playerPosition);
+        super.onSaveInstanceState(outState);
+    }
+
 }

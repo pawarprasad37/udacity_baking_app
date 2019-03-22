@@ -2,6 +2,7 @@ package com.theandroiddeveloper.bakersworld.fragment;
 
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ public class RecipeStepsFragment extends Fragment {
     private ListView listView;
     private AdapterView.OnItemClickListener onStepClickListener;
     private int selectedStepIndex;
+    private Parcelable scrollState;
 
     public RecipeStepsFragment() {
         // Required empty public constructor
@@ -65,6 +67,9 @@ public class RecipeStepsFragment extends Fragment {
                 selectedRecipe.getSteps(), selectedStepIndex);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(onStepClickListener);
+        if (scrollState != null) {
+            listView.onRestoreInstanceState(scrollState);
+        }
     }
 
     private void updateListSelection() {
@@ -73,5 +78,19 @@ public class RecipeStepsFragment extends Fragment {
         }
         ((RecipeStepsAdapter) listView.getAdapter())
                 .setSelectedIndex(selectedStepIndex);
+    }
+
+    public int getSelectedIndex() {
+        return selectedStepIndex;
+    }
+
+    public Parcelable getListScrollState() {
+        if (listView == null) return null;
+        return listView.onSaveInstanceState();
+    }
+
+    public RecipeStepsFragment setListScrollState(Parcelable scrollState) {
+        this.scrollState = scrollState;
+        return this;
     }
 }

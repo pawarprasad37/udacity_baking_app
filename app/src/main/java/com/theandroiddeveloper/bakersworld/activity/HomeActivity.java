@@ -31,11 +31,13 @@ import retrofit2.Response;
 
 public class HomeActivity extends BaseActivity implements Callback<List<Recipe>> {
     private CountingIdlingResource countingIdlingResource;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        recyclerView = findViewById(R.id.recyclerView);
 
         if (getIntent().getBooleanExtra(Constant.IntentExtra.IS_WIDGET_RECIPE_SELECTION_MODE,
                 false)) {
@@ -77,7 +79,6 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
     }
 
     private void displayRecipes(RealmResults<Recipe> recipeRealmResults) {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         View tabIdentifier = findViewById(R.id.tabIdentifier);
         boolean isTabletDevice = (tabIdentifier != null);
         if (isTabletDevice) {
@@ -124,4 +125,24 @@ public class HomeActivity extends BaseActivity implements Callback<List<Recipe>>
         countingIdlingResource.decrement();
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (recyclerView.getLayoutManager() != null) {
+            outState.putParcelable(Constant.AppState.RECYCLER_VIEW_STATE,
+                    recyclerView.getLayoutManager().onSaveInstanceState());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //called after onStart() so recyclerView adapter is already set.
+        if (recyclerView.getLayoutManager() != null) {
+            recyclerView.getLayoutManager()
+                    .onRestoreInstanceState(savedInstanceState
+                            .getParcelable(Constant.AppState.RECYCLER_VIEW_STATE));
+        }
+    }
 }

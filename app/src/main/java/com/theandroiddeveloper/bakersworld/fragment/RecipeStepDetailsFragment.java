@@ -45,6 +45,7 @@ public class RecipeStepDetailsFragment extends Fragment implements View.OnClickL
     private int activeStepIndex;
     private int totalStepCount;
     private NavButtonClickListener navButtonClickListener;
+    private long playerPosition;
 
     public interface NavButtonClickListener {
         void onPreviousStepClicked();
@@ -63,6 +64,11 @@ public class RecipeStepDetailsFragment extends Fragment implements View.OnClickL
 
     public RecipeStepDetailsFragment setIsMasterDetailFlow(boolean isMasterDetailFlow) {
         this.isMasterDetailFlow = isMasterDetailFlow;
+        return this;
+    }
+
+    public RecipeStepDetailsFragment setPlayerPosition(long playerPosition) {
+        this.playerPosition = playerPosition;
         return this;
     }
 
@@ -129,6 +135,7 @@ public class RecipeStepDetailsFragment extends Fragment implements View.OnClickL
         playerView.setPlayer(exoPlayer);
 
         playerView.setBackgroundColor(Color.BLACK);
+        exoPlayer.seekTo(playerPosition);
     }
 
     private void setPlayerOrImageViewDimens(View targetView) {
@@ -207,6 +214,10 @@ public class RecipeStepDetailsFragment extends Fragment implements View.OnClickL
                 navButtonClickListener.onNextStepClicked();
             }
         }
+    }
+
+    public long getPlayerPosition() {
+        return exoPlayer != null ? exoPlayer.getCurrentPosition() : 0;
     }
 
 }

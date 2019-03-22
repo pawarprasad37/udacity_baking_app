@@ -8,17 +8,18 @@ import com.theandroiddeveloper.bakersworld.fragment.RecipeStepDetailsFragment;
 import com.theandroiddeveloper.bakersworld.model.Recipe;
 import com.theandroiddeveloper.bakersworld.model.RecipeStep;
 
-import io.realm.RealmList;
-
 public class RecipeStepDetailsActivity extends BaseActivity {
     private int activeStepIndex;
     private Recipe recipe;
+    private long playerPosition;
+    private RecipeStepDetailsFragment recipeStepDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         if (savedInstanceState != null) {
             activeStepIndex = savedInstanceState.getInt(Constant.AppState.ACTIVE_STEP_INDEX);
+            playerPosition = savedInstanceState.getLong(Constant.AppState.VIDEO_PLAYER_POSITION);
         }
         setContentView(R.layout.activity_recipe_step_details);
     }
@@ -71,7 +72,8 @@ public class RecipeStepDetailsActivity extends BaseActivity {
             return;
         }
 
-        RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment()
+        recipeStepDetailsFragment = new RecipeStepDetailsFragment()
+                .setPlayerPosition(playerPosition)
                 .setIsMasterDetailFlow(getIntent()
                         .getBooleanExtra(Constant.IntentExtra.IS_MASTER_DETAIL_FLOW,
                                 false))
@@ -88,6 +90,7 @@ public class RecipeStepDetailsActivity extends BaseActivity {
                         if (activeStepIndex == 0) {
                             return;
                         }
+                        playerPosition = 0;
                         activeStepIndex--;
                         displayFragmentForActiveStepIndex();
                     }
@@ -97,6 +100,7 @@ public class RecipeStepDetailsActivity extends BaseActivity {
                         if (activeStepIndex == recipe.getSteps().size() - 1) {
                             return;
                         }
+                        playerPosition = 0;
                         activeStepIndex++;
                         displayFragmentForActiveStepIndex();
                     }
@@ -108,6 +112,8 @@ public class RecipeStepDetailsActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(Constant.AppState.ACTIVE_STEP_INDEX, activeStepIndex);
+        outState.putLong(Constant.AppState.VIDEO_PLAYER_POSITION,
+                recipeStepDetailsFragment.getPlayerPosition());
         super.onSaveInstanceState(outState);
     }
 }

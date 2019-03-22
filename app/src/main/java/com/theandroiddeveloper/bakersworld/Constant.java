@@ -13,6 +13,10 @@ public class Constant {
 
     public interface AppState {
         String ACTIVE_STEP_INDEX = "ACTIVE_STEP_INDEX";
+        String RECYCLER_VIEW_STATE = "RECYCLER_VIEW_STATE";
+        String STEP_LIST_SELECTED_INDEX = "STEP_LIST_SELECTED_INDEX";
+        String VIDEO_PLAYER_POSITION = "VIDEO_PLAYER_POSITION";
+        String STEP_LIST_SCROLL_STATE = "STEP_LIST_SCROLL_STATE";
     }
 
     public interface AppPreferences {
